@@ -4,7 +4,7 @@ on:
     branches: [main]
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
 jobs:
   package:
     runs-on: ubuntu-latest
@@ -34,3 +34,14 @@ jobs:
           path: dist/HYPERREAL-SHADERS.zip
           if-no-files-found: error
           retention-days: 30
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v0.1.0-alpha"
+          NOTES="Alpha release of HYPERREAL-SHADERS for Minecraft Java 1.20.4 with Iris + Sodium. Includes the current shader pipeline baseline. This is an early alpha; full volumetric clouds, advanced water reflections, global illumination and complete PBR are not implemented yet. Runtime testing in Minecraft is still required."
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" dist/HYPERREAL-SHADERS.zip --clobber
+          else
+            gh release create "$TAG" dist/HYPERREAL-SHADERS.zip --target "$GITHUB_SHA" --title "HYPERREAL-SHADERS v0.1.0-alpha" --notes "$NOTES"
+          fi
