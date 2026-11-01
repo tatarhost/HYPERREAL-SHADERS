@@ -17,6 +17,14 @@ jobs:
           python-version: "3.12"
       - name: Validate shader-pack structure
         run: python tools/validate_pack.py
+      - name: Install GLSL validator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y glslang-tools
+      - name: Validate GLSL syntax
+        run: |
+          for file in shaders/*.vsh; do glslangValidator -S vert "$file"; done
+          for file in shaders/*.fsh; do glslangValidator -S frag "$file"; done
       - name: Package installable ZIP
         run: python tools/package_pack.py
       - name: Upload shader-pack ZIP
