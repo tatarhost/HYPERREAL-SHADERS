@@ -15,18 +15,12 @@ uniform vec3 sunPosition;
 uniform float viewWidth;
 uniform float viewHeight;
 uniform float shadowMapResolution;
-uniform float near;
-uniform float far;
 uniform float rainStrength;
 uniform int worldTime;
 in vec2 texcoord;
 /* RENDERTARGETS: 0 */
 layout(location = 0) out vec4 fragColor;
 
-float linearDepth(float depth) {
-    float z = depth * 2.0 - 1.0;
-    return (2.0 * near * far) / max(far + near - z * (far - near), 0.0001);
-}
 float sampleShadow(vec3 viewPosition) {
 #ifdef SHADOWS
     vec4 worldPosition = gbufferModelViewInverse * vec4(viewPosition, 1.0);
