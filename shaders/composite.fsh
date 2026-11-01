@@ -1,8 +1,8 @@
 #version 330 compatibility
-#define SHADOWS
-#define BLOOM
-#define DISTANT_FOG
-#define GOD_RAYS
+#define SHADOWS // Enable shadow-map lighting
+#define BLOOM // Enable highlight bloom
+#define DISTANT_FOG // Enable distance atmosphere
+#define GOD_RAYS // Enable screen-space sun rays
 uniform sampler2D colortex0;
 uniform sampler2D depthtex0;
 uniform sampler2D shadowtex0;
@@ -98,7 +98,7 @@ void main() {
         float sampleDepth = texture(depthtex0, clamp(sampleUv, 0.001, 0.999)).r;
         rays += smoothstep(0.997, 1.0, sampleDepth);
     }
-    float sunMask = smoothstep(0.2, 0.0, distance(texcoord, sunUv));
+    float sunMask = 1.0 - smoothstep(0.0, 0.2, distance(texcoord, sunUv));
     scene += vec3(1.0, 0.78, 0.48) * rays * sunMask * 0.006;
 #endif
     vec2 centered = texcoord * 2.0 - 1.0;
