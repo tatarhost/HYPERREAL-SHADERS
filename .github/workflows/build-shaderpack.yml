@@ -38,10 +38,10 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          TAG="v0.1.0-alpha"
-          NOTES="Alpha release of HYPERREAL-SHADERS for Minecraft Java 1.20.4 with Iris + Sodium. Includes the current shader pipeline baseline. This is an early alpha; full volumetric clouds, advanced water reflections, global illumination and complete PBR are not implemented yet. Runtime testing in Minecraft is still required."
+          TAG="v0.1.1-alpha"
+          NOTES="HYPERREAL-SHADERS v0.1.1-alpha for Minecraft Java 1.20.4 with Iris + Sodium. Fixes the overexposed composite color pipeline by decoding sRGB to linear before lighting and tone mapping, then encoding for display. Bloom, exposure and sun-ray intensity were reduced. This remains an early alpha: volumetric clouds, advanced water reflections, global illumination and complete PBR are not implemented. Static GLSL validation does not replace runtime testing in Minecraft."
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" dist/HYPERREAL-SHADERS.zip --clobber
           else
-            gh release create "$TAG" dist/HYPERREAL-SHADERS.zip --target "$GITHUB_SHA" --title "HYPERREAL-SHADERS v0.1.0-alpha" --notes "$NOTES"
+            gh release create "$TAG" dist/HYPERREAL-SHADERS.zip --target "$GITHUB_SHA" --title "HYPERREAL-SHADERS v0.1.1-alpha" --notes "$NOTES"
           fi
