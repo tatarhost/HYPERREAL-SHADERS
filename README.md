@@ -11,7 +11,8 @@ Original Minecraft Java shader-pack project targeting **Minecraft 1.20.4 + Iris 
 - Distance-based atmospheric tint approximation.
 - Lightweight four-tap highlight bloom.
 - Screen-space sun-ray approximation, gated by depth.
-- ACES-style tone mapping and subtle vignette.
+- Linear-light color pipeline (sRGB decode → lighting/tone mapping → sRGB encode) to prevent washed-out output.
+- Conservative exposure, restrained highlight bloom, and subtle vignette.
 - Quality profiles from LOW through CINEMATIC.
 
 ## Compatibility
@@ -42,6 +43,10 @@ Python 3.10+ is sufficient for packaging and structural validation:
     python tools/package_pack.py
 
 The ZIP has the shader-pack root at its top level, so it can be copied directly into shaderpacks.
+
+## Recent visual fix
+
+The composite pass previously tone-mapped display-encoded colors without first converting them to linear light. This caused midtones to become excessively bright. The pass now performs the inverse gamma conversion before lighting and tone mapping, then converts back for display. This is a code-level correction; a full Minecraft/Iris runtime screenshot test is still required.
 
 ## Honest limitations
 
