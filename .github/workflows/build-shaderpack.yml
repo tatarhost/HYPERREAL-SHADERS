@@ -1,0 +1,28 @@
+name: Build Shader Pack
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Validate shader-pack structure
+        run: python tools/validate_pack.py
+      - name: Package installable ZIP
+        run: python tools/package_pack.py
+      - name: Upload shader-pack ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: HYPERREAL-SHADERS
+          path: dist/HYPERREAL-SHADERS.zip
+          if-no-files-found: error
+          retention-days: 30
